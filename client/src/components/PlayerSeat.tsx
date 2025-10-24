@@ -14,6 +14,8 @@ export interface Player {
   isFolded?: boolean;
   currentBet?: number;
   isDealer?: boolean;
+  isSmallBlind?: boolean;
+  isBigBlind?: boolean;
 }
 
 interface PlayerSeatProps {
@@ -45,6 +47,16 @@ export function PlayerSeat({ player, showCards = false, className }: PlayerSeatP
         {player.isDealer && (
           <Badge variant="secondary" className="absolute -bottom-2 left-1/2 -translate-x-1/2 text-xs px-2">
             D
+          </Badge>
+        )}
+        {player.isSmallBlind && (
+          <Badge variant="secondary" className="absolute -bottom-2 left-1/2 -translate-x-1/2 text-xs px-2">
+            SB
+          </Badge>
+        )}
+        {player.isBigBlind && (
+          <Badge variant="secondary" className="absolute -bottom-2 left-1/2 -translate-x-1/2 text-xs px-2">
+            BB
           </Badge>
         )}
       </div>
