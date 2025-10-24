@@ -10,6 +10,7 @@ import { type Card } from "./PlayingCard";
 import { cn } from "@/lib/utils";
 import pokerTableBg from "@assets/Table_1761308561661.jpg";
 import { useState } from "react";
+import { pokerGameService } from "@/lib/pokerGame";
 
 interface PokerTableProps {
   players: Player[];
@@ -99,13 +100,13 @@ export function PokerTable({
       </div>
 
       {/* Betting Controls */}
-      {currentPlayer && !currentPlayer.isFolded && (
+      {currentPlayer && !currentPlayer.isFolded && currentPlayer.isActive && (
         <BettingControls
-          currentBet={currentPlayer.currentBet || 0}
-          minRaise={100}
-          maxRaise={1000}
+          currentBet={pokerGameService.getCallAmount()}
+          minRaise={pokerGameService.getMinRaise()}
+          maxRaise={pokerGameService.getMaxRaise()}
           playerChips={currentPlayer.chips}
-          canCheck={!currentPlayer.currentBet || currentPlayer.currentBet === 0}
+          canCheck={pokerGameService.canCheck()}
           onFold={onFold}
           onCheck={onCheck}
           onCall={onCall}
