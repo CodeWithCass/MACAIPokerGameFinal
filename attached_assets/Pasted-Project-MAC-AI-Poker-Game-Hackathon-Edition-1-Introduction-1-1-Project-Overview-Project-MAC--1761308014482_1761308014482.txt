@@ -1,0 +1,178 @@
+Project MAC — AI Poker Game (Hackathon Edition)
+1. Introduction
+1.1 Project Overview
+Project MAC is a web-based, single-player Texas Hold’em Poker experience built in Replit.
+ You face off against AI-controlled opponents, hosted by a charismatic AI Dealer powered by an LLM (e.g. GPT or Gemini).
+ The dealer provides real-time, sassy commentary and strategic hints, making every round dynamic and entertaining.
+1.2 Hackathon Goals
+Type
+Goal
+🎯 Primary
+Deliver a fast, functional, and flashy poker MVP
+🧠 AI Showstopper
+Integrate an LLM (GPT or Gemini) as the “Dealer Cassie” for live narration + player hints
+🏗️ Architectural
+Keep logic modular for easy future multiplayer or leaderboard expansion
+
+
+2. System Overview
+2.1 Actors
+Player (Human): Plays hands, makes betting decisions, requests hints.
+
+
+AI Dealer (Cassie): Controls game flow, shuffles/deals, manages pot, and provides witty LLM-driven commentary.
+
+
+AI Bots: Lightweight, rule-based poker opponents.
+
+
+2.2 Tech Stack
+Layer
+Tool
+Frontend/UI
+v0.app or Bubble.io (rapid prototyping)
+Game Logic Backend
+Node.js on Replit
+AI Integration
+OpenAI GPT API or Google Gemini API
+Visual Assets
+Recraft.ai (table background, cards, avatars)
+Deployment
+Replit (demo) or Vercel (if time allows)
+
+
+3. Functional Requirements (MVP Scope)
+3.1 Game Setup & Flow
+Player selects number of AI bots (1–3).
+
+
+All players start with a fixed chip stack (e.g., 1500).
+
+
+The dealer assigns positions (Dealer / Small Blind / Big Blind).
+
+
+Deck is shuffled and hole cards dealt.
+
+
+3.2 Core Gameplay
+Feature
+Description
+Dealing
+Dealer shuffles 52-card deck and deals 2 hole cards per player, plus 5 community cards (Flop, Turn, River).
+Betting
+4 rounds (Pre-flop → Flop → Turn → River). Simplified betting for MVP (Call, Fold, Check, Raise).
+AI Decisions
+Rule-based: bot folds on weak hands, calls on medium, raises on strong.
+Hand Evaluation
+After final round, evaluate 7-card best hands (using poker ranking logic).
+Showdown
+Display winner, winning hand, and chips won.
+
+3.3 AI Dealer Features (LLM Integration)
+Requirement
+Description
+Narration (FR-10)
+Cassie comments after each phase (deal, flop, raise, showdown). Tone: sassy, charismatic, witty.
+Personality (FR-11)
+Dealer persona: Cassie, the cheeky casino dealer who never loses her cool.
+Hint System (FR-12)
+“Get Hint” button triggers an AI call with context (hole cards, community cards, bets). Cassie gives a short, fun recommendation (“Well sugar, I’d fold faster than a cheap lawn chair”).
+
+3.4 End of Hand
+Display winner, pot, and chip updates.
+
+
+Offer “Play Again” or “Exit” buttons.
+
+
+Player stats (games played, wins/losses) stored temporarily in browser session (no DB for MVP).
+
+
+
+4. Non-Functional Requirements
+Responsiveness: Gameplay updates in under 1s.
+
+
+LLM Latency: Commentary returns <3s.
+
+
+UI Clarity: Clearly show cards, chips, pot, and actions.
+
+
+Extensibility: Code separated into modules:
+
+
+gameLogic.js – deck, deal, winner logic
+
+
+dealerAI.js – LLM prompts & responses
+
+
+ui.js – handles user interaction
+
+
+
+5. Open Questions & Assumptions
+No all-in or side-pot logic in MVP.
+
+
+AI Bots use rule-based heuristics (not LLM-driven).
+
+
+No persistent user accounts for now.
+
+
+TBD: LLM API cost limits (use local “mock” if quota exceeded).
+
+
+
+6. Replit Setup Guide (for the devs)
+🧩 Folder Structure
+/project-mac
+ ├── index.js             # Entry point (launch game)
+ ├── gameLogic.js         # Deck, deal, betting, hand evaluation
+ ├── dealerAI.js          # GPT/Gemini integration
+ ├── ui.js                # Simple text or HTML UI for player
+ ├── assets/              # AI-generated images
+ └── package.json
+
+⚙️ Dependencies
+npm init -y
+npm install express openai cors
+
+🧠 Quick Start Command
+node index.js
+
+
+7. Suggested Task Split (for 3 teammates)
+Role
+Focus
+Deliverable
+Dev 1 (Game Logic)
+Deck, shuffle, deal, hand evaluator
+gameLogic.js working poker engine
+Dev 2 (UI/Frontend)
+Basic HTML or v0.app UI, buttons, display
+Interactive screen + “Deal”, “Hint”, “Fold”
+BA (AI & Flow)
+Craft Cassie’s personality, prompts, and integrate GPT API
+dealerAI.js with 3–4 contextual prompts
+
+
+8. Example Prompts for Cassie (Dealer Personality)
+Round Start
+“Welcome back, hotshot. Let’s see if you’ve learned to play smarter than my grandma today.”
+After a Raise
+“Ooh, someone’s feeling lucky. Don’t make me call your bluff!”
+Hint Button
+“Hmm, with those cards, I’d stay cautious — but hey, fortune favors the flirty.”
+Showdown
+“And just like that, another dream crushed. Better luck next hand, darling.”
+
+9. MVP Success Criteria (Judge-Friendly)
+✅ Game runs in browser (Replit or hosted link)
+ ✅ Player can play at least one hand end-to-end
+ ✅ AI dealer gives witty live commentary (via GPT/Gemini)
+ ✅ Simple but polished visuals (Recraft.ai assets optional)
+ ✅ Clean demo flow (<2 minutes to show)
