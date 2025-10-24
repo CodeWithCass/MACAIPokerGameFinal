@@ -11,9 +11,15 @@ import { useState } from "react";
 
 interface GameSetupProps {
   onStart: (botCount: number) => void;
+  hasSavedGame?: boolean;
+  onContinue?: () => void;
 }
 
-export function GameSetup({ onStart }: GameSetupProps) {
+export function GameSetup({
+  onStart,
+  hasSavedGame = false,
+  onContinue,
+}: GameSetupProps) {
   const [botCount, setBotCount] = useState("2");
   const startingChips = 1500;
 
@@ -29,11 +35,9 @@ export function GameSetup({ onStart }: GameSetupProps) {
               </AvatarFallback>
             </Avatar>
           </div>
-          
+
           <div className="space-y-2">
-            <CardTitle className="text-4xl font-display">
-              Project MAC
-            </CardTitle>
+            <CardTitle className="text-4xl font-display">Project MAC</CardTitle>
             <div className="flex items-center justify-center gap-2">
               <Sparkles className="w-4 h-4 text-primary" />
               <p className="text-lg text-muted-foreground">
@@ -44,9 +48,12 @@ export function GameSetup({ onStart }: GameSetupProps) {
 
           <div className="bg-muted/50 rounded-xl p-4">
             <p className="text-lg font-display leading-relaxed">
-              "Welcome back, hotshot. Let's see if you've learned to play smarter than my grandma today."
+              "Welcome back, hotshot. Let's see if you've learned to play
+              smarter than my grandma today."
             </p>
-            <p className="text-sm text-muted-foreground mt-2">— Cassie, your dealer</p>
+            <p className="text-sm text-muted-foreground mt-2">
+              — Cassie, your dealer
+            </p>
           </div>
         </CardHeader>
 
@@ -68,8 +75,14 @@ export function GameSetup({ onStart }: GameSetupProps) {
                   className="cursor-pointer"
                 >
                   <div className="flex items-center space-x-2 border-2 border-card-border rounded-xl p-4 hover-elevate active-elevate-2 transition-all has-[:checked]:border-primary has-[:checked]:bg-primary/5">
-                    <RadioGroupItem value={count} id={`bot-${count}`} data-testid={`radio-bot-${count}`} />
-                    <span className="font-semibold text-lg">{count} {count === "1" ? "Bot" : "Bots"}</span>
+                    <RadioGroupItem
+                      value={count}
+                      id={`bot-${count}`}
+                      data-testid={`radio-bot-${count}`}
+                    />
+                    <span className="font-semibold text-lg">
+                      {count} {count === "1" ? "Bot" : "Bots"}
+                    </span>
                   </div>
                 </Label>
               ))}
@@ -80,8 +93,8 @@ export function GameSetup({ onStart }: GameSetupProps) {
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground">Starting Chips:</span>
               <Badge variant="secondary" className="text-base px-3 py-1">
-                <ChipIcon value={startingChips} className="w-4 h-4 mr-2" />
-                ${startingChips.toLocaleString()}
+                <ChipIcon value={startingChips} className="w-4 h-4 mr-2" />$
+                {startingChips.toLocaleString()}
               </Badge>
             </div>
             <div className="flex items-center justify-between">
@@ -94,13 +107,26 @@ export function GameSetup({ onStart }: GameSetupProps) {
             </div>
           </div>
 
+          {hasSavedGame && onContinue && (
+            <Button
+              size="lg"
+              onClick={onContinue}
+              variant="default"
+              className="w-full h-16 text-lg mb-3"
+              data-testid="button-continue"
+            >
+              Continue Saved Game
+            </Button>
+          )}
+
           <Button
             size="lg"
             onClick={() => onStart(parseInt(botCount))}
+            variant={hasSavedGame ? "outline" : "default"}
             className="w-full h-16 text-lg"
             data-testid="button-deal-me-in"
           >
-            Deal Me In!
+            {hasSavedGame ? "Start New Game" : "Deal Me In!"}
           </Button>
         </CardContent>
       </Card>

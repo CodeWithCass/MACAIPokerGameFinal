@@ -29,6 +29,11 @@ interface PokerTableProps {
   onRaise: (amount: number) => void;
   onHint: () => void;
   className?: string;
+  currentBet?: number;
+  minRaise?: number;
+  maxRaise?: number;
+  canCheck?: boolean;
+  isPlayerTurn?: boolean;
 }
 
 export function PokerTable({
@@ -43,14 +48,23 @@ export function PokerTable({
   onCall,
   onRaise,
   onHint,
-  className
+  className,
+  currentBet = 0,
+  minRaise = 50,
+  maxRaise = 1000,
+  canCheck = false,
+  isPlayerTurn = true,
 }: PokerTableProps) {
   const [showHint, setShowHint] = useState(false);
-  const currentPlayer = players.find(p => p.id === currentPlayerId);
-  const otherPlayers = players.filter(p => p.id !== currentPlayerId);
+  const humanPlayer = players.find((p) => p.id === "player");
+  const currentPlayer = players.find((p) => p.id === currentPlayerId);
+  const otherPlayers = players.filter((p) =>
+    p.id === "player" ? false : true,
+  );
 
   // TODO: Remove mock functionality
-  const mockHint = "Well sugar, I'd fold faster than a cheap lawn chair with those cards. Your hand's weaker than my morning coffee, darling.";
+  const mockHint =
+    "Well sugar, I'd fold faster than a cheap lawn chair with those cards. Your hand's weaker than my morning coffee, darling.";
 
   const handleHint = () => {
     setShowHint(true);
@@ -58,7 +72,10 @@ export function PokerTable({
   };
 
   return (
-    <div className={cn("min-h-screen flex flex-col", className)} data-testid="poker-table">
+    <div
+      className={cn("min-h-screen flex flex-col", className)}
+      data-testid="poker-table"
+    >
       {/* Top Stats Bar */}
       <div className="bg-card/95 backdrop-blur-sm border-b border-card-border p-4">
         <div className="max-w-7xl mx-auto">
@@ -67,7 +84,7 @@ export function PokerTable({
       </div>
 
       {/* Main Game Area */}
-      <div 
+      <div
         className="flex-1 relative overflow-hidden bg-cover bg-center"
         style={{ backgroundImage: `url(${pokerTableBg})` }}
       >
@@ -91,21 +108,21 @@ export function PokerTable({
             <PotDisplay amount={pot} />
           </div>
 
-          {/* Current Player */}
-          {currentPlayer && (
-            <PlayerSeat player={currentPlayer} showCards className="scale-110" />
+          {/* Human Player */}
+          {humanPlayer && (
+            <PlayerSeat player={humanPlayer} showCards className="scale-110" />
           )}
         </div>
       </div>
 
       {/* Betting Controls */}
-      {currentPlayer && !currentPlayer.isFolded && (
+      {humanPlayer && !humanPlayer.isFolded && isPlayerTurn && (
         <BettingControls
-          currentBet={currentPlayer.currentBet || 0}
-          minRaise={100}
-          maxRaise={1000}
-          playerChips={currentPlayer.chips}
-          canCheck={!currentPlayer.currentBet || currentPlayer.currentBet === 0}
+          currentBet={currentBet}
+          minRaise={minRaise}
+          maxRaise={maxRaise}
+          playerChips={humanPlayer.chips}
+          canCheck={canCheck}
           onFold={onFold}
           onCheck={onCheck}
           onCall={onCall}
